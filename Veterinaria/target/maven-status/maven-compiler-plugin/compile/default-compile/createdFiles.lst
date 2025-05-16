@@ -3,6 +3,7 @@ app/domain/models/Person.class
 app/adapters/medicalOrders/MedicalOrderAdapter.class
 app/adapters/inputs/utils/UserValidator.class
 app/adapters/rest/AdminController.class
+app/adapters/rest/request/MedicalHistoryRequest.class
 app/ports/InvoicePort.class
 app/domain/models/MedicalHistory.class
 app/adapters/inputs/utils/PersonValidator.class
@@ -14,12 +15,15 @@ app/domain/services/AdminService.class
 app/adapters/persons/entity/PersonEntity.class
 app/adapters/inputs/utils/MedicalHistoryValidator.class
 app/adapters/rest/request/SellerRequest.class
+app/adapters/rest/request/MedicalOrderRequest.class
 app/adapters/medicalHistorys/entity/MedicalHistoryEntity.class
 app/adapters/pets/entity/PetEntity.class
 app/adapters/invoices/InvoiceAdapter.class
 app/adapters/invoices/entity/InvoiceEntity.class
 app/ports/PersonPort.class
+app/adapters/rest/VeterinaryController.class
 app/adapters/rest/request/VeterinarianRequest.class
+app/domain/services/AuthenticationService.class
 app/Exceptions/BusinessException.class
 app/adapters/inputs/utils/Utils.class
 app/ports/PetPort.class
@@ -28,6 +32,7 @@ app/domain/services/VeterinarianService.class
 app/adapters/users/repository/UserRepository.class
 app/adapters/users/UserAdapter.class
 app/adapters/medicalHistorys/repository/MedicalHistoryRepository.class
+app/adapters/rest/request/PetRequest.class
 app/adapters/pets/repository/PetRepository.class
 app/domain/models/Pet.class
 app/Exceptions/AuthenticationException.class
@@ -37,6 +42,7 @@ app/domain/models/Invoice.class
 app/adapters/inputs/utils/MedicalOrderValidator.class
 app/domain/models/User.class
 app/adapters/medicalHistorys/MedicalHistoryAdapter.class
+app/adapters/rest/request/OwnerRequest.class
 app/adapters/users/entity/UserEntity.class
 app/ports/InputPort.class
 app/domain/services/LoginService.class

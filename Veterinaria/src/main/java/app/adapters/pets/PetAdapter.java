@@ -1,4 +1,3 @@
-
 package app.adapters.pets;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +16,28 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Service
-
-public class PetAdapter implements PetPort{
+public class PetAdapter implements PetPort {
     
     @Autowired
     private PetRepository petRepository;
 
     @Override 
-    public boolean existPet(long petId){
+    public boolean existPet(long petId) {
         return petRepository.existsById(petId);
     }
 
     @Override
-    public void savePet(Pet pet){
+    public void savePet(Pet pet) {
         PetEntity petEntity = toEntity(pet);
-        petRepository.save(petEntity);
+        petEntity.setPetId(null);
+        petEntity = petRepository.save(petEntity);
         pet.setPetId(petEntity.getPetId());
     }
     
     @Override
-    public Pet findByPetId(long petId){
+    public Pet findByPetId(long petId) {
         PetEntity petEntity = petRepository.findByPetId(petId);
-        if (petEntity == null){
+        if (petEntity == null) {
             return null;
         }
         return toModel(petEntity);
@@ -46,10 +45,10 @@ public class PetAdapter implements PetPort{
 
     @Override
     public List<Pet> findByOwnerId(long ownerDocument) {
-        List<PetEntity> petEntities =petRepository.findByOwnerDocument(ownerDocument);
-        List<Pet> pets =new ArrayList<>();
+        List<PetEntity> petEntities = petRepository.findByOwnerDocument(ownerDocument);
+        List<Pet> pets = new ArrayList<>();
         
-        for (PetEntity petEntity : petEntities){
+        for (PetEntity petEntity : petEntities) {
             pets.add(toModel(petEntity));
         }
         return pets;
@@ -57,7 +56,6 @@ public class PetAdapter implements PetPort{
     
     private PetEntity toEntity(Pet pet) {
         PetEntity petEntity = new PetEntity();
-        petEntity.setPetId(pet.getPetId());
         petEntity.setAge(pet.getAge());
         petEntity.setColor(pet.getColor());
         petEntity.setName(pet.getName());
@@ -67,8 +65,8 @@ public class PetAdapter implements PetPort{
         petEntity.setSpecies(pet.getSpecies());
         petEntity.setWeight(pet.getWeight());
         return petEntity;
-        
     }
+
     private Pet toModel(PetEntity petEntity) {
         Pet pet = new Pet();
         pet.setPetId(petEntity.getPetId());
@@ -81,8 +79,5 @@ public class PetAdapter implements PetPort{
         pet.setSpecies(petEntity.getSpecies());
         pet.setWeight(petEntity.getWeight());
         return pet;
-        
     }
-
-
 }

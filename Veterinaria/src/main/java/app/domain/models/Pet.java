@@ -1,26 +1,25 @@
 package app.domain.models;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class Pet {
-    private long petId;
+    private Long petId;
     private String name;
-    private long ownerDocument;
-    private String species;
     private int age;
-    private String color;
+    private String species;
     private String race;
+    private String characteristics;
+    private long ownerDocument;
+    private String color;
     private String size;
     private double weight;
 
-    
-    public long getPetId() {
+    public Long getPetId() {
         return petId;
     }
 
@@ -28,24 +27,28 @@ public class Pet {
         return name;
     }
 
-    public long getOwnerDocument() {
-        return ownerDocument;
+    public int getAge() {
+        return age;
     }
 
     public String getSpecies() {
         return species;
     }
 
-    public int getAge() {
-        return age;
+    public String getRace() {
+        return race;
+    }
+
+    public String getCharacteristics() {
+        return characteristics;
+    }
+
+    public long getOwnerDocument() {
+        return ownerDocument;
     }
 
     public String getColor() {
         return color;
-    }
-
-    public String getRace() {
-        return race;
     }
 
     public String getSize() {
@@ -56,7 +59,7 @@ public class Pet {
         return weight;
     }
 
-    public void setPetId(long petId) {
+    public void setPetId(Long petId) {
         this.petId = petId;
     }
 
@@ -64,24 +67,28 @@ public class Pet {
         this.name = name;
     }
 
-    public void setOwnerDocument(long ownerDocument) {
-        this.ownerDocument = ownerDocument;
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public void setSpecies(String species) {
         this.species = species;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setRace(String race) {
+        this.race = race;
+    }
+
+    public void setCharacteristics(String characteristics) {
+        this.characteristics = characteristics;
+    }
+
+    public void setOwnerDocument(long ownerDocument) {
+        this.ownerDocument = ownerDocument;
     }
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public void setRace(String race) {
-        this.race = race;
     }
 
     public void setSize(String size) {
@@ -91,8 +98,4 @@ public class Pet {
     public void setWeight(double weight) {
         this.weight = weight;
     }
-
-
-   
-
 }

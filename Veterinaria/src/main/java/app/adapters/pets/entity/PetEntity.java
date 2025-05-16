@@ -1,4 +1,3 @@
-
 package app.adapters.pets.entity;
 
 import jakarta.persistence.Column;
@@ -14,7 +13,7 @@ public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="id")
-    private long petId;
+    private Long petId;
     @Column(name= "name")
     private String name;
     @Column(name = "owner_document")
@@ -32,7 +31,7 @@ public class PetEntity {
     @Column(name = "weight")
     private double weight;
 
-    public long getPetId() {
+    public Long getPetId() {
         return petId;
     }
 
@@ -68,7 +67,7 @@ public class PetEntity {
         return weight;
     }
 
-    public void setPetId(long petId) {
+    public void setPetId(Long petId) {
         this.petId = petId;
     }
 
