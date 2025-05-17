@@ -4,15 +4,19 @@
  */
 package app.adapters.medicalOrders.entity;
 
+import app.adapters.medicalHistorys.entity.MedicalHistoryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.FetchType;
 
 /**
  *
@@ -26,7 +30,7 @@ public class MedicalOrderEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="medical_id")
+    @Column(name="medical_id", nullable = false, updatable = false)
     private Long medicalOrderId;
     
     @Column(name="id_pet")
@@ -38,7 +42,7 @@ public class MedicalOrderEntity {
     @Column(name="veterinarian_document")
     private long veterinarianId;
     
-    @Column (name="medicaction")
+    @Column(name="medicaction")
     private String medication;
     
     @Column(name="entry_date_medical")
@@ -46,6 +50,10 @@ public class MedicalOrderEntity {
     
     @Column(name="canceled")
     private boolean canceled;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medical_history_id")
+    private MedicalHistoryEntity medicalHistory;
 
     public Long getMedicalOrderId() {
         return medicalOrderId;
@@ -103,6 +111,11 @@ public class MedicalOrderEntity {
         this.canceled = canceled;
     }
 
-    
-    
+    public MedicalHistoryEntity getMedicalHistory() {
+        return medicalHistory;
+    }
+
+    public void setMedicalHistory(MedicalHistoryEntity medicalHistory) {
+        this.medicalHistory = medicalHistory;
+    }
 }

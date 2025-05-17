@@ -164,6 +164,7 @@ public class VeterinaryController {
             );
             medicalOrder.setEntryDate(request.getEntryDate());
             medicalOrder.setCanceled(false);
+            medicalOrder.setMedicalHistoryId(request.getMedicalHistoryId());
 
             // Guardar orden médica
             veterinarianService.generateOrder(medicalOrder);

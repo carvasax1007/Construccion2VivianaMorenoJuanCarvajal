@@ -12,4 +12,5 @@ public class MedicalOrderRequest {
     private Long ownerId;
     private String medication;
     private Date entryDate;
+    private Long medicalHistoryId;
 } 

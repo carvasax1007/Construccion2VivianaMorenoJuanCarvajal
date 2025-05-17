@@ -6,6 +6,7 @@ package app.adapters.medicalOrders;
 
 import app.adapters.medicalOrders.entity.MedicalOrderEntity;
 import app.adapters.medicalOrders.repository.MedicalOrderRepository;
+import app.adapters.medicalHistorys.entity.MedicalHistoryEntity;
 import app.domain.models.MedicalOrder;
 import app.ports.MedicalOrderPort;
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ public class MedicalOrderAdapter implements MedicalOrderPort{
     
     @Autowired
     private MedicalOrderRepository medicalOrderRepository;
+
+    @Autowired
+    private app.adapters.medicalHistorys.repository.MedicalHistoryRepository medicalHistoryRepository;
+
     @Override
     public void save(MedicalOrder medicalOrder){
         MedicalOrderEntity medicalOrderEntity = medicalOrderEntityAdapter(medicalOrder);
@@ -74,37 +79,40 @@ public class MedicalOrderAdapter implements MedicalOrderPort{
     private MedicalOrderEntity medicalOrderEntityAdapter(MedicalOrder medicalOrder){
         if (medicalOrder == null) return null;
         MedicalOrderEntity entity = new MedicalOrderEntity();
-        entity.setMedicalOrderId(medicalOrder.getMedicalOrderId());
+        
+        // Solo establecer el ID si es una actualización
+        if (medicalOrder.getMedicalOrderId() > 0) {
+            entity.setMedicalOrderId(medicalOrder.getMedicalOrderId());
+        }
+        
         entity.setPetId(medicalOrder.getPetId());
         entity.setCanceled(medicalOrder.isCanceled());
         entity.setEntryDate(medicalOrder.getEntryDate());
         entity.setVeterinarianId(medicalOrder.getVeterinarianId());
         entity.setOwnerId(medicalOrder.getOwnerId());
         entity.setMedication(medicalOrder.getMedication());
+        
+        // Configurar la relación con MedicalHistory si existe el ID
+        if (medicalOrder.getMedicalHistoryId() != null) {
+            MedicalHistoryEntity historyEntity = medicalHistoryRepository.getReferenceById(medicalOrder.getMedicalHistoryId());
+            entity.setMedicalHistory(historyEntity);
+        }
+        
         return entity;
     }
     private MedicalOrder toDomain(MedicalOrderEntity entity){
-        if (entity == null ) return null;
-        return new MedicalOrder(
-        entity.getMedicalOrderId(),
-        entity.getPetId(),
-        entity.getOwnerId(),
-        entity.getVeterinarianId(),
-        entity.getMedication(),
-        entity.getEntryDate(),
-        entity.isCanceled());
-    }
-    private MedicalOrder medicalOrderEntityAdapter(MedicalOrderEntity entity){
         if (entity == null) return null;
-        MedicalOrder medicalOrder = new MedicalOrder(0,0,0,0,"", new Date(), false);
-        medicalOrder.setCanceled(entity.isCanceled());
-        medicalOrder.setEntryDate(entity.getEntryDate());
+        MedicalOrder medicalOrder = new MedicalOrder();
         medicalOrder.setMedicalOrderId(entity.getMedicalOrderId());
-        medicalOrder.setMedication(entity.getMedication());
-        medicalOrder.setOwnerId(entity.getOwnerId());
         medicalOrder.setPetId(entity.getPetId());
+        medicalOrder.setOwnerId(entity.getOwnerId());
         medicalOrder.setVeterinarianId(entity.getVeterinarianId());
+        medicalOrder.setMedication(entity.getMedication());
+        medicalOrder.setEntryDate(entity.getEntryDate());
+        medicalOrder.setCanceled(entity.isCanceled());
+        if (entity.getMedicalHistory() != null) {
+            medicalOrder.setMedicalHistoryId(entity.getMedicalHistory().getMedicalHistoryId());
+        }
         return medicalOrder;
     }
-                
 }

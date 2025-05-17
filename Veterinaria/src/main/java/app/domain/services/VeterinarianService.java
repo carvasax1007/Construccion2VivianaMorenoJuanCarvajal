@@ -82,9 +82,28 @@ public class VeterinarianService {
         if (medicalOrder == null) {
             throw new Exception("La orden medica no puede ser vacia");
         }
+        
+        // Verificar que la mascota exista
         if (!petPort.existPet(medicalOrder.getPetId())) {
             throw new Exception("La mascota no está registrada.");
         }
+
+        // Verificar que el propietario exista
+        if (!personPort.existPerson(medicalOrder.getOwnerId())) {
+            throw new Exception("El propietario con documento " + medicalOrder.getOwnerId() + " no existe.");
+        }
+
+        // Verificar que la historia clínica exista
+        MedicalHistory medicalHistory = medicalHistoryPort.findById(medicalOrder.getMedicalHistoryId());
+        if (medicalHistory == null) {
+            throw new Exception("La historia clínica especificada no existe.");
+        }
+
+        // Verificar que la historia clínica corresponda a la mascota
+        if (!medicalHistory.getPetId().equals(medicalOrder.getPetId())) {
+            throw new Exception("La historia clínica no corresponde a la mascota especificada.");
+        }
+
         medicalOrderPort.save(medicalOrder);
     }
 

@@ -107,14 +107,15 @@ public class MedicalHistoryAdapter implements MedicalHistoryPort{
     }
     private MedicalOrder toDomain(MedicalOrderEntity entity){
         if (entity == null) return null;
-        return new MedicalOrder(
-            entity.getMedicalOrderId(),
-            entity.getPetId(),
-            entity.getOwnerId(),
-            entity.getVeterinarianId(),
-            entity.getMedication(),
-            entity.getEntryDate(),
-            entity.isCanceled());
+        MedicalOrder medicalOrder = new MedicalOrder();
+        medicalOrder.setMedicalOrderId(entity.getMedicalOrderId());
+        medicalOrder.setPetId(entity.getPetId());
+        medicalOrder.setOwnerId(entity.getOwnerId());
+        medicalOrder.setVeterinarianId(entity.getVeterinarianId());
+        medicalOrder.setMedication(entity.getMedication());
+        medicalOrder.setEntryDate(entity.getEntryDate());
+        medicalOrder.setCanceled(entity.isCanceled());
+        return medicalOrder;
     }
     private MedicalOrderEntity toEntity(MedicalOrder order){
         if (order==null) return null;

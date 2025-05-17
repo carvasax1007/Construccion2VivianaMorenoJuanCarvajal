@@ -15,9 +15,10 @@ public class MedicalOrder {
     private String medication;
     private Date entryDate;
     private boolean canceled;
+    private Long medicalHistoryId;
 
     public MedicalOrder(){}
-    public MedicalOrder(long medicalOrderId, long petId, long ownerId, long veterinarianId, String medication, Date entryDate, boolean canceled) {
+    public MedicalOrder(long medicalOrderId, long petId, long ownerId, long veterinarianId, String medication, Date entryDate, boolean canceled, Long medicalHistoryId) {
         this.medicalOrderId = medicalOrderId;
         this.petId = petId;
         this.ownerId = ownerId;
@@ -25,6 +26,7 @@ public class MedicalOrder {
         this.medication = medication;
         this.entryDate = entryDate;
         this.canceled = canceled;
+        this.medicalHistoryId = medicalHistoryId;
     }
 
     public long getMedicalOrderId() {
@@ -82,6 +84,12 @@ public class MedicalOrder {
     public void setCanceled(boolean canceled) {
         this.canceled = canceled;
     }
- 
-  
+
+    public Long getMedicalHistoryId() {
+        return medicalHistoryId;
+    }
+
+    public void setMedicalHistoryId(Long medicalHistoryId) {
+        this.medicalHistoryId = medicalHistoryId;
+    }
 }
