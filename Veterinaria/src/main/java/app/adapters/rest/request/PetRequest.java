@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class PetRequest {
     private long veterinaryDocument;
-    private String veterinaryName;
     private String petName;
     private int petAge;
     private String species;

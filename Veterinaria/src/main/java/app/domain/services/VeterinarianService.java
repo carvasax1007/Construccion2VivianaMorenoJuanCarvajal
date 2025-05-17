@@ -39,7 +39,7 @@ public class VeterinarianService {
         if (!personPort.existPerson(pet.getOwnerDocument())) {
             throw new Exception("El dueño con documento " + pet.getOwnerDocument() + " no existe");
         }
-        petPort.savePet(pet);
+         petPort.savePet(pet);
     }
 
     public void registerOwner(Person owner) throws Exception {
@@ -53,6 +53,12 @@ public class VeterinarianService {
         if (medicalHistory == null) {
             throw new Exception("El historial médico no puede ser nulo.");
         }
+        
+        // Verificar que la mascota exista
+        if (!petPort.existPet(medicalHistory.getPetId())) {
+            throw new Exception("La mascota con ID " + medicalHistory.getPetId() + " no existe");
+        }
+        
         medicalHistoryPort.save(medicalHistory);
     }
 
@@ -63,7 +69,7 @@ public class VeterinarianService {
             throw new Exception("No se encontró un historial médico para esta mascota.");
         }
         return historyList;
-    }
+}
 
     public void updateMedicalHistory(MedicalHistory medicalHistory) throws Exception {
         if (medicalHistory == null) {
@@ -88,19 +94,19 @@ public class VeterinarianService {
         }
         MedicalOrder existingOrder = medicalOrderPort.findById(medicalOrder.getMedicalOrderId());
         if (existingOrder == null) {
-            throw new Exception("La orden médica no existe.");
+        throw new Exception("La orden médica no existe.");
         }
-        existingOrder.setCanceled(true);
+        existingOrder.setCanceled(true); 
         medicalOrderPort.save(existingOrder);
     }
 
     public MedicalOrder getMedicalOrderById(long medicalOrderId) throws Exception {
-        MedicalOrder order = medicalOrderPort.findById(medicalOrderId);
-
-        if (order == null) {
-            throw new Exception("No se encontró una orden médica con el ID: " + medicalOrderId);
-        }
-        return order;
+    MedicalOrder order = medicalOrderPort.findById(medicalOrderId);
+    
+    if (order == null) {
+        throw new Exception("No se encontró una orden médica con el ID: " + medicalOrderId);
     }
+    return order;
+}
 }
 

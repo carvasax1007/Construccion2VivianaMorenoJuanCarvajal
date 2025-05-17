@@ -7,6 +7,7 @@ package app.adapters.medicalHistorys;
 import app.adapters.medicalHistorys.entity.MedicalHistoryEntity;
 import app.adapters.medicalHistorys.repository.MedicalHistoryRepository;
 import app.adapters.medicalOrders.entity.MedicalOrderEntity;
+import app.adapters.pets.entity.PetEntity;
 import app.domain.models.MedicalHistory;
 import app.domain.models.MedicalOrder;
 import app.ports.MedicalHistoryPort;
@@ -47,12 +48,7 @@ public class MedicalHistoryAdapter implements MedicalHistoryPort{
             existingEntity.setSymptomatology(medicalHistory.getSymptomatology());
             existingEntity.setDiagnosis(medicalHistory.getDiagnosis());
             existingEntity.setCancellationOrder(medicalHistory.getCancellationOrder());
-            /*existingEntity.setDetailProcedure(medicalHistory.getDateilprocedure());
-
-            /*existingEntity.setMedicationAllergic(medicalHistory.getMedicationsAllergic());
-            existingEntity.setProcedures(medicalHistory.getProcedures());
-            existingEntity.setMedicalOrder(medicalHistory.getMedicalOrder());
-            existingEntity.setVaccinationHistory(medicalHistory.getVaccinationHistory());*/
+            existingEntity.setDetailProcedure(medicalHistory.getDateilprocedure());
 
             medicalHistoryRepository.save(existingEntity);
         }
@@ -80,33 +76,32 @@ public class MedicalHistoryAdapter implements MedicalHistoryPort{
     private MedicalHistory toDomain(MedicalHistoryEntity entity){
         MedicalHistory medicalHistory = new MedicalHistory();
         medicalHistory.setMedicalHistoryId(entity.getMedicalHistoryId());
-        medicalHistory.setRegistrationDate((Date) entity.getRegistrationDate());
+        medicalHistory.setPetId(entity.getPet().getPetId());
+        medicalHistory.setRegistrationDate(entity.getRegistrationDate());
         medicalHistory.setVeterinaryDoctor(entity.getVeterinaryDoctor());
         medicalHistory.setReasonConsultation(entity.getReasonConsultation());
         medicalHistory.setSymptomatology(entity.getSymptomatology());
         medicalHistory.setDiagnosis(entity.getDiagnosis());
         medicalHistory.setCancellationOrder(entity.isCancellationOrder());
         medicalHistory.setDateilprocedure(entity.getDetailProcedure());
-        /*medicalHistory.setMedicationsAllergic(entity.getMedicationAllergic());
-        medicalHistory.setProcedures(entity.getProcedures());
-        medicalHistory.setMedicalOrder(entity.getMedicalOrder());
-        medicalHistory.setVaccinationHistory(entity.getVaccinationHistory());*/
 
         return medicalHistory;
     }
     private MedicalHistoryEntity medicalHistoryEntityAdapter(MedicalHistory medicalHistory){
         MedicalHistoryEntity entity = new MedicalHistoryEntity();
+        
+        // Configurar la mascota
+        PetEntity petEntity = new PetEntity();
+        petEntity.setPetId(medicalHistory.getPetId());
+        entity.setPet(petEntity);
+        
         entity.setRegistrationDate(medicalHistory.getRegistrationDate());
         entity.setVeterinaryDoctor(medicalHistory.getVeterinaryDoctor());
         entity.setReasonConsultation(medicalHistory.getReasonConsultation());
         entity.setSymptomatology(medicalHistory.getSymptomatology());
         entity.setDiagnosis(medicalHistory.getDiagnosis());
-        entity.setCancellationOrder(medicalHistory.getCancellationOrder()); // Revisa el tipo aquí
+        entity.setCancellationOrder(medicalHistory.getCancellationOrder());
         entity.setDetailProcedure(medicalHistory.getDateilprocedure());
-        /*entity.setMedicationAllergic(medicalHistory.getMedicationsAllergic());
-        entity.setProcedures(medicalHistory.getProcedures());
-        entity.setMedicalOrder(medicalHistory.getMedicalOrder());
-        entity.setVaccinationHistory(medicalHistory.getVaccinationHistory());*/
 
         return entity;
     }

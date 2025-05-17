@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class MedicalHistoryRequest {
     private long veterinaryDocument;
-    private String veterinaryName;
     private Date registrationDate;
     private String reasonConsultation;
     private String symptomatology;

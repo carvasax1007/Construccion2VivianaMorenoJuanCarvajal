@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 
 public class MedicalHistory {
+    private Long petId;
     private Date registrationDate;
     private String veterinaryDoctor;
     private String reasonConsultation;
@@ -31,6 +32,14 @@ public class MedicalHistory {
 
     public void setMedicalHistoryId(Long medicalHistoryId) {
         this.medicalHistoryId = medicalHistoryId;
+    }
+
+    public Long getPetId() {
+        return petId;
+    }
+
+    public void setPetId(Long petId) {
+        this.petId = petId;
     }
     
     

@@ -12,15 +12,11 @@ public class AuthenticationService {
     @Autowired
     private PersonPort personPort;
 
-    public Person authenticateVeterinarian(long document, String name) throws AuthenticationException {
+    public Person authenticateVeterinarian(long document) throws AuthenticationException {
         Person person = personPort.findByDocument(document);
         
         if (person == null) {
             throw new AuthenticationException("Veterinario no encontrado");
-        }
-
-        if (!person.getName().equals(name)) {
-            throw new AuthenticationException("Nombre incorrecto");
         }
 
         // Verificar que sea un veterinario

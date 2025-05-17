@@ -42,8 +42,7 @@ public class VeterinaryController {
         try {
             // Autenticar veterinario
             Person veterinarian = authenticationService.authenticateVeterinarian(
-                request.getVeterinaryDocument(), 
-                request.getVeterinaryName()
+                request.getVeterinaryDocument()
             );
 
             // Crear y validar dueño
@@ -74,8 +73,7 @@ public class VeterinaryController {
         try {
             // Autenticar veterinario
             Person veterinarian = authenticationService.authenticateVeterinarian(
-                request.getVeterinaryDocument(), 
-                request.getVeterinaryName()
+                request.getVeterinaryDocument()
             );
 
             // Crear y validar mascota
@@ -112,12 +110,12 @@ public class VeterinaryController {
         try {
             // Autenticar veterinario
             Person veterinarian = authenticationService.authenticateVeterinarian(
-                request.getVeterinaryDocument(), 
-                request.getVeterinaryName()
+                request.getVeterinaryDocument()
             );
 
             // Crear y validar historia clínica
             MedicalHistory medicalHistory = new MedicalHistory();
+            medicalHistory.setPetId(request.getPetId());
             medicalHistory.setRegistrationDate(request.getRegistrationDate());
             medicalHistory.setVeterinaryDoctor(veterinarian.getName());
             medicalHistory.setReasonConsultation(
@@ -153,8 +151,7 @@ public class VeterinaryController {
         try {
             // Autenticar veterinario
             Person veterinarian = authenticationService.authenticateVeterinarian(
-                request.getVeterinaryDocument(), 
-                request.getVeterinaryName()
+                request.getVeterinaryDocument()
             );
 
             // Crear y validar orden médica
@@ -188,11 +185,10 @@ public class VeterinaryController {
     @GetMapping("/medical-history/pet/{petId}")
     public ResponseEntity getMedicalHistoryByPetId(
             @PathVariable String petId,
-            @RequestParam long veterinaryDocument,
-            @RequestParam String veterinaryName) {
+            @RequestParam long veterinaryDocument) {
         try {
             // Autenticar veterinario
-            authenticationService.authenticateVeterinarian(veterinaryDocument, veterinaryName);
+            authenticationService.authenticateVeterinarian(veterinaryDocument);
 
             // Obtener historias clínicas
             return new ResponseEntity(veterinarianService.getMedicalHistoryByPetId(petId), 
@@ -208,11 +204,10 @@ public class VeterinaryController {
     @GetMapping("/medical-order/{orderId}")
     public ResponseEntity getMedicalOrder(
             @PathVariable long orderId,
-            @RequestParam long veterinaryDocument,
-            @RequestParam String veterinaryName) {
+            @RequestParam long veterinaryDocument) {
         try {
             // Autenticar veterinario
-            authenticationService.authenticateVeterinarian(veterinaryDocument, veterinaryName);
+            authenticationService.authenticateVeterinarian(veterinaryDocument);
 
             // Obtener orden médica
             return new ResponseEntity(veterinarianService.getMedicalOrderById(orderId), 

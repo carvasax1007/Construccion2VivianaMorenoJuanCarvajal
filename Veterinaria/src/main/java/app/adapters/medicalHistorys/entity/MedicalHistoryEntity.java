@@ -20,7 +20,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.OneToOne;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class MedicalOrderRequest {
     private long veterinaryDocument;
-    private String veterinaryName;
     private Long petId;
     private Long ownerId;
     private String medication;
