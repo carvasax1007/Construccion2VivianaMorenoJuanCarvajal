@@ -16,4 +16,5 @@ public interface PetPort {
 
     public boolean existPet(long petId);
 
+    public Pet findById(long petId);
 }

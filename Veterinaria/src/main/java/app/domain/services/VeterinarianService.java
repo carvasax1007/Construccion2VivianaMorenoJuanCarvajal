@@ -69,7 +69,7 @@ public class VeterinarianService {
             throw new Exception("No se encontró un historial médico para esta mascota.");
         }
         return historyList;
-    }
+}
 
     public void updateMedicalHistory(MedicalHistory medicalHistory) throws Exception {
         if (medicalHistory == null) {
@@ -165,6 +165,59 @@ public class VeterinarianService {
 
         // Retornar la historia clínica más reciente
         return histories.get(0);
+    }
+
+    public Pet getPetById(long petId, long veterinaryDocument) throws Exception {
+        // Verificar que el veterinario exista y sea válido
+        Person veterinarian = personPort.findByDocument(veterinaryDocument);
+        if (veterinarian == null || !"veterinarian".equalsIgnoreCase(veterinarian.getRole())) {
+            throw new Exception("El veterinario con documento " + veterinaryDocument + " no existe o no tiene permisos.");
+        }
+
+        // Obtener la mascota
+        Pet pet = petPort.findById(petId);
+        if (pet == null) {
+            throw new Exception("No se encontró la mascota con ID " + petId);
+        }
+
+        return pet;
+    }
+
+    public Person getOwnerByDocument(long ownerDocument, long veterinaryDocument) throws Exception {
+        // Verificar que el veterinario exista y sea válido
+        Person veterinarian = personPort.findByDocument(veterinaryDocument);
+        if (veterinarian == null || !"veterinarian".equalsIgnoreCase(veterinarian.getRole())) {
+            throw new Exception("El veterinario con documento " + veterinaryDocument + " no existe o no tiene permisos.");
+        }
+
+        // Obtener el dueño
+        Person owner = personPort.findByDocument(ownerDocument);
+        if (owner == null) {
+            throw new Exception("No se encontró el dueño con documento " + ownerDocument);
+        }
+
+        return owner;
+    }
+
+    public List<MedicalOrder> getMedicalOrdersByPetId(long petId, long userDocument) throws Exception {
+        // Verificar que el usuario exista y tenga el rol correcto
+        Person user = personPort.findByDocument(userDocument);
+        if (user == null || (!"veterinarian".equalsIgnoreCase(user.getRole()) && !"seller".equalsIgnoreCase(user.getRole()))) {
+            throw new Exception("El usuario con documento " + userDocument + " no existe o no tiene permisos.");
+        }
+
+        // Verificar que la mascota exista
+        if (!petPort.existPet(petId)) {
+            throw new Exception("La mascota con ID " + petId + " no existe.");
+        }
+
+        // Obtener las órdenes médicas
+        List<MedicalOrder> orders = medicalOrderPort.findByPetId(petId);
+        if (orders.isEmpty()) {
+            throw new Exception("No se encontraron órdenes médicas para la mascota con ID " + petId);
+        }
+
+        return orders;
     }
 }
 

@@ -20,6 +20,7 @@
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/pets/entity/PetEntity.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/pets/repository/PetRepository.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/rest/AdminController.java
+/home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/rest/SellerController.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/rest/VeterinaryController.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/rest/request/CancelOrderRequest.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/rest/request/MedicalHistoryQueryRequest.java

@@ -34,16 +34,16 @@ public class MedicalOrderAdapter implements MedicalOrderPort{
     public void save(MedicalOrder medicalOrder){
         MedicalOrderEntity medicalOrderEntity = medicalOrderEntityAdapter(medicalOrder);
         
-        // Si hay una historia clínica asociada, agregar la orden a ella
+        // Si hay una historia clínica asociada, establecer la relación
         if (medicalOrder.getMedicalHistoryId() != null) {
             MedicalHistoryEntity historyEntity = medicalHistoryRepository.findById(medicalOrder.getMedicalHistoryId())
                 .orElseThrow(() -> new RuntimeException("Historia clínica no encontrada"));
             
             medicalOrderEntity.setMedicalHistory(historyEntity);
             historyEntity.getMedicalOrders().add(medicalOrderEntity);
-            medicalHistoryRepository.save(historyEntity);
         }
         
+        // Guardar la orden médica una sola vez
         medicalOrderRepository.save(medicalOrderEntity);
         medicalOrder.setMedicalOrderId(medicalOrderEntity.getMedicalOrderId());
     }

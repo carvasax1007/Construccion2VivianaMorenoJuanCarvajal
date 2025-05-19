@@ -52,6 +52,27 @@ public class InvoiceAdapter implements InvoicePort{
         return toDomain(invoiceEntity);
     }    
     
+    @Override
+    public List<Invoice> findBySellerId(long sellerId) {
+        List<InvoiceEntity> entities = invoiceRepository.findBySellerId(sellerId);
+        List<Invoice> invoices = new ArrayList<>();
+        if (entities != null) {
+            for (InvoiceEntity entity : entities) {
+                invoices.add(toDomain(entity));
+            }
+        }
+        return invoices;
+    }
+
+    @Override
+    public Invoice findById(long invoiceId) {
+        InvoiceEntity entity = invoiceRepository.findById(invoiceId).orElse(null);
+        if (entity != null) {
+            return toDomain(entity);
+        }
+        return null;
+    }
+    
     private InvoiceEntity toEntity(Invoice invoice) {
         if (invoice == null) return null;
         

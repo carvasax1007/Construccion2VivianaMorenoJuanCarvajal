@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class VeterinaryController {
 
@@ -198,12 +200,14 @@ public class VeterinaryController {
         }
     }
 
-    @PostMapping("/medical-history/query")
-    public ResponseEntity getMedicalHistory(@RequestBody MedicalHistoryQueryRequest request) {
+    @GetMapping("/medical-history")
+    public ResponseEntity getMedicalHistory(
+            @RequestParam long petId,
+            @RequestParam long veterinaryDocument) {
         try {
             MedicalHistory history = veterinarianService.getMedicalHistoryByPetId(
-                request.getPetId(), 
-                request.getVeterinaryDocument()
+                petId, 
+                veterinaryDocument
             );
             return new ResponseEntity(history, HttpStatus.OK);
         } catch (AuthenticationException ae) {
@@ -232,6 +236,57 @@ public class VeterinaryController {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/pet")
+    public ResponseEntity getPet(
+            @RequestParam long petId,
+            @RequestParam long veterinaryDocument) {
+        try {
+            Pet pet = veterinarianService.getPetById(petId, veterinaryDocument);
+            return new ResponseEntity(pet, HttpStatus.OK);
+        } catch (AuthenticationException ae) {
+            return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BusinessException be) {
+            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity("Error al obtener los datos de la mascota: " + e.getMessage(), 
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity getOwner(
+            @RequestParam long ownerDocument,
+            @RequestParam long veterinaryDocument) {
+        try {
+            Person owner = veterinarianService.getOwnerByDocument(ownerDocument, veterinaryDocument);
+            return new ResponseEntity(owner, HttpStatus.OK);
+        } catch (AuthenticationException ae) {
+            return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BusinessException be) {
+            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity("Error al obtener los datos del dueño: " + e.getMessage(), 
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/medical-orders")
+    public ResponseEntity getMedicalOrders(
+            @RequestParam long petId,
+            @RequestParam long userDocument) {
+        try {
+            List<MedicalOrder> orders = veterinarianService.getMedicalOrdersByPetId(petId, userDocument);
+            return new ResponseEntity(orders, HttpStatus.OK);
+        } catch (AuthenticationException ae) {
+            return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BusinessException be) {
+            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity("Error al obtener las órdenes médicas: " + e.getMessage(), 
+                HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 } 

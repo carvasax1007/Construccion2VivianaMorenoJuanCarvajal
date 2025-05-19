@@ -19,4 +19,6 @@ public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Long> {
     List<InvoiceEntity> findByOwnerId(Long ownerId);
 
     InvoiceEntity findByInvoiceId(Long invoiceId);
+
+    List<InvoiceEntity> findBySellerId(long sellerId);
 }

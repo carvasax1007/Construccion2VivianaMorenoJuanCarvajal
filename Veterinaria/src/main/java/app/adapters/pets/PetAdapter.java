@@ -54,6 +54,15 @@ public class PetAdapter implements PetPort {
         return pets;
     }
     
+    @Override
+    public Pet findById(long petId) {
+        PetEntity entity = petRepository.findById(petId).orElse(null);
+        if (entity != null) {
+            return toModel(entity);
+        }
+        return null;
+    }
+    
     private PetEntity toEntity(Pet pet) {
         PetEntity petEntity = new PetEntity();
         petEntity.setAge(pet.getAge());
