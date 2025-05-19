@@ -1,4 +1,3 @@
-
 package app.domain.models;
 
 import java.util.Date;
@@ -12,77 +11,86 @@ import lombok.NoArgsConstructor;
 
 public class Invoice {
     
-    private long invoiceId;
-    private long petId;
-    private long ownerDocument;
+    private Long invoiceId;
+    private Long petId;
+    private Long ownerId;
+    private Long sellerId;
+    private Long medicalOrderId;
     private String productName;
-    private double price;
-    private int amount;
-    private Date invoiceDate;
-    private long medicalOrderId;
+    private Double value;
+    private Integer quantity;
+    private String date;
 
-    public long getInvoiceId() {
+    public Long getInvoiceId() {
         return invoiceId;
     }
 
-    public long getPetId() {
+    public Long getPetId() {
         return petId;
     }
 
-    public long getOwnerDocument() {
-        return ownerDocument;
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public Long getSellerId() {
+        return sellerId;
+    }
+
+    public Long getMedicalOrderId() {
+        return medicalOrderId;
     }
 
     public String getProductName() {
         return productName;
     }
 
-    public double getPrice() {
-        return price;
+    public Double getValue() {
+        return value;
     }
 
-    public int getAmount() {
-        return amount;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public Date getInvoiceDate() {
-        return invoiceDate;
+    public String getDate() {
+        return date;
     }
 
-    public long getMedicalOrderId() {
-        return medicalOrderId;
-    }
-
-    public void setInvoiceId(long invoiceId) {
+    public void setInvoiceId(Long invoiceId) {
         this.invoiceId = invoiceId;
     }
 
-    public void setPetId(long petId) {
+    public void setPetId(Long petId) {
         this.petId = petId;
     }
 
-    public void setOwnerDocument(long ownerDocument) {
-        this.ownerDocument = ownerDocument;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public void setMedicalOrderId(Long medicalOrderId) {
+        this.medicalOrderId = medicalOrderId;
     }
 
     public void setProductName(String productName) {
         this.productName = productName;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setValue(Double value) {
+        this.value = value;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public void setInvoiceDate(Date invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
-
-    public void setMedicalOrderId(long medicalOrderId) {
-        this.medicalOrderId = medicalOrderId;
+    public void setDate(String date) {
+        this.date = date;
     }
 
 }

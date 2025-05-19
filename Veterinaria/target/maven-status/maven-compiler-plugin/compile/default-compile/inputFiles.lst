@@ -4,6 +4,7 @@
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/VeterinaryApplication.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/inputs/utils/PetValidator.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/invoices/InvoiceAdapter.java
+/home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/invoices/controller/InvoiceController.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/invoices/entity/InvoiceEntity.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/invoices/repository/InvoiceRepository.java
 /home/carvajal/Escritorio/Universidad/Tercer Semestre/Construcción de Software/Construccion2VivianaMorenoJuanCarvajal/Veterinaria/src/main/java/app/adapters/medicalHistorys/MedicalHistoryAdapter.java

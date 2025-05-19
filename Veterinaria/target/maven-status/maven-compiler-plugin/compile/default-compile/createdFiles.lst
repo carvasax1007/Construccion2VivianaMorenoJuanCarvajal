@@ -47,6 +47,7 @@ app/adapters/users/entity/UserEntity.class
 app/ports/InputPort.class
 app/domain/services/LoginService.class
 app/adapters/inputs/utils/PetValidator.class
+app/adapters/invoices/controller/InvoiceController.class
 app/adapters/invoices/repository/InvoiceRepository.class
 app/domain/services/SellerService.class
 app/VeterinaryApplication.class

@@ -12,9 +12,11 @@ package app.adapters.invoices.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import app.adapters.invoices.entity.InvoiceEntity;
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Long> {
-    public List<InvoiceEntity> findByOwnerDocument(long ownerDocument);
+    List<InvoiceEntity> findByOwnerId(Long ownerId);
 
-    public InvoiceEntity findByInvoiceId(long invoiceId);
+    InvoiceEntity findByInvoiceId(Long invoiceId);
 }

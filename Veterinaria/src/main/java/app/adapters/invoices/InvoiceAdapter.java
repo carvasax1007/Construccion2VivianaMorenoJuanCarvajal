@@ -1,4 +1,3 @@
-
 package app.adapters.invoices;
 
 import app.adapters.invoices.entity.InvoiceEntity;
@@ -7,6 +6,9 @@ import app.domain.models.Invoice;
 import app.ports.InvoicePort;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,19 +29,19 @@ public class InvoiceAdapter implements InvoicePort{
     
     @Override 
     public void saveInvoice(Invoice invoice) {
-        InvoiceEntity invoiceEntity = invoiceAdapter(invoice);
-        invoiceRepository.save(invoiceEntity);
-        invoice.setInvoiceId(invoiceEntity.getInvoiceId());
+        InvoiceEntity entity = toEntity(invoice);
+        invoiceRepository.save(entity);
+        invoice.setInvoiceId(entity.getInvoiceId());
     }
 
 
     @Override
-    public  List<Invoice>findByOwnerDocument(long ownerDocument){
-        List<InvoiceEntity> invoiceEntities = invoiceRepository.findByOwnerDocument(ownerDocument);
+    public List<Invoice> findByOwnerDocument(long ownerId) {
+        List<InvoiceEntity> invoiceEntities = invoiceRepository.findByOwnerId(ownerId);
         List<Invoice> invoices = new ArrayList<>();
         
-        for (InvoiceEntity entity : invoiceEntities){
-            invoices.add(toModel(entity));
+        for (InvoiceEntity entity : invoiceEntities) {
+            invoices.add(toDomain(entity));
         }
         return invoices;
     }
@@ -47,46 +49,49 @@ public class InvoiceAdapter implements InvoicePort{
     @Override
     public Invoice findByInvoiceId(long invoiceId) {
         InvoiceEntity invoiceEntity = invoiceRepository.findByInvoiceId(invoiceId);
-        return invoiceAdapter(invoiceEntity);
+        return toDomain(invoiceEntity);
     }    
     
-    private Invoice invoiceAdapter(InvoiceEntity invoiceEntity) {
-        Invoice invoice = new Invoice();
-        invoice.setAmount(invoiceEntity.getAmount());
-        invoice.setInvoiceDate(invoiceEntity.getInvoiceDate());
-        invoice.setInvoiceId(invoiceEntity.getInvoiceId());
-        invoice.setMedicalOrderId(invoiceEntity.getMedicalOrderId());
-        invoice.setOwnerDocument(invoiceEntity.getOwnerDocument());
-        invoice.setPetId(invoiceEntity.getPetId());
-        invoice.setProductName(invoiceEntity.getProductName());
-        invoice.setPrice(invoiceEntity.getPrice());
-        return invoice;
+    private InvoiceEntity toEntity(Invoice invoice) {
+        if (invoice == null) return null;
         
+        InvoiceEntity entity = new InvoiceEntity();
+        entity.setInvoiceId(invoice.getInvoiceId());
+        entity.setPetId(invoice.getPetId());
+        entity.setOwnerId(invoice.getOwnerId());
+        entity.setSellerId(invoice.getSellerId());
+        entity.setMedicalOrderId(invoice.getMedicalOrderId());
+        entity.setProductName(invoice.getProductName());
+        entity.setValue(invoice.getValue());
+        entity.setQuantity(invoice.getQuantity());
+        
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate = dateFormat.parse(invoice.getDate());
+            entity.setDate(parsedDate);
+        } catch (ParseException e) {
+            throw new RuntimeException("Error al convertir la fecha: " + e.getMessage());
+        }
+        
+        return entity;
     }
     
-    private InvoiceEntity invoiceAdapter(Invoice invoice){
-        InvoiceEntity invoiceEntity = new InvoiceEntity();
-        invoiceEntity.setAmount(invoice.getAmount());
-        invoiceEntity.setInvoiceDate(invoice.getInvoiceDate());
-        invoiceEntity.setInvoiceId(invoice.getInvoiceId());
-        invoiceEntity.setMedicalOrderId(invoice.getMedicalOrderId());
-        invoiceEntity.setOwnerDocument(invoice.getOwnerDocument());
-        invoiceEntity.setPetId(invoice.getPetId());
-        invoiceEntity.setProductName(invoice.getProductName());
-        invoiceEntity.setPrice(invoice.getPrice());
-        return invoiceEntity;
-    }
-    private Invoice toModel(InvoiceEntity entity){
+    private Invoice toDomain(InvoiceEntity entity) {
+        if (entity == null) return null;
+        
         Invoice invoice = new Invoice();
-        invoice.setAmount(entity.getAmount());
-        invoice.setInvoiceDate(entity.getInvoiceDate());
         invoice.setInvoiceId(entity.getInvoiceId());
-        invoice.setMedicalOrderId(entity.getMedicalOrderId());
-        invoice.setOwnerDocument(entity.getOwnerDocument());
         invoice.setPetId(entity.getPetId());
+        invoice.setOwnerId(entity.getOwnerId());
+        invoice.setSellerId(entity.getSellerId());
+        invoice.setMedicalOrderId(entity.getMedicalOrderId());
         invoice.setProductName(entity.getProductName());
-        invoice.setPrice(entity.getPrice());
+        invoice.setValue(entity.getValue());
+        invoice.setQuantity(entity.getQuantity());
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        invoice.setDate(dateFormat.format(entity.getDate()));
+        
         return invoice;
     }
-
 }
