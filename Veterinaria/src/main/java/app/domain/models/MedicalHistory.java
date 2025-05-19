@@ -19,7 +19,7 @@ public class MedicalHistory {
     private String symptomatology;
     private String diagnosis;
     private List<String> procedures;
-    private MedicalOrder medicalOrder;
+    private List<MedicalOrder> medicalOrders;
     private List<String> vaccinationHistory;
     private List<String> medicationsAllergic;
     private String dateilprocedure;
@@ -68,8 +68,8 @@ public class MedicalHistory {
         return procedures;
     }
 
-        public MedicalOrder getMedicalOrder() {
-            return medicalOrder;
+    public List<MedicalOrder> getMedicalOrders() {
+        return medicalOrders;
         }
 
     public List<String> getVaccinationHistory() {
@@ -112,8 +112,8 @@ public class MedicalHistory {
         this.procedures = procedures;
     }
 
-    public void setMedicalOrder(MedicalOrder medicalOrder) {
-        this.medicalOrder = medicalOrder;
+    public void setMedicalOrders(List<MedicalOrder> medicalOrders) {
+        this.medicalOrders = medicalOrders;
     }
 
     public void setVaccinationHistory(List<String> vaccinationHistory) {

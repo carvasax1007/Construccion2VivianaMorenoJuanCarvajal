@@ -33,6 +33,17 @@ public class MedicalOrderAdapter implements MedicalOrderPort{
     @Override
     public void save(MedicalOrder medicalOrder){
         MedicalOrderEntity medicalOrderEntity = medicalOrderEntityAdapter(medicalOrder);
+        
+        // Si hay una historia clínica asociada, agregar la orden a ella
+        if (medicalOrder.getMedicalHistoryId() != null) {
+            MedicalHistoryEntity historyEntity = medicalHistoryRepository.findById(medicalOrder.getMedicalHistoryId())
+                .orElseThrow(() -> new RuntimeException("Historia clínica no encontrada"));
+            
+            medicalOrderEntity.setMedicalHistory(historyEntity);
+            historyEntity.getMedicalOrders().add(medicalOrderEntity);
+            medicalHistoryRepository.save(historyEntity);
+        }
+        
         medicalOrderRepository.save(medicalOrderEntity);
         medicalOrder.setMedicalOrderId(medicalOrderEntity.getMedicalOrderId());
     }
@@ -47,11 +58,13 @@ public class MedicalOrderAdapter implements MedicalOrderPort{
     }
     @Override
     public void cancel(long medicalOrderId){
-        MedicalOrderEntity entity = medicalOrderRepository.findById(medicalOrderId).orElse(null);
-        if (entity!=null){
+        MedicalOrderEntity entity = medicalOrderRepository.findById(medicalOrderId)
+            .orElseThrow(() -> new RuntimeException("Orden médica no encontrada"));
+        
             entity.setCanceled(true);
             medicalOrderRepository.save(entity);
-        }
+        
+        // La orden permanece en la historia clínica, solo se marca como cancelada
     }
     @Override
     public List<MedicalOrder> findByPetId(long petId){
@@ -82,7 +95,7 @@ public class MedicalOrderAdapter implements MedicalOrderPort{
         
         // Solo establecer el ID si es una actualización
         if (medicalOrder.getMedicalOrderId() > 0) {
-            entity.setMedicalOrderId(medicalOrder.getMedicalOrderId());
+        entity.setMedicalOrderId(medicalOrder.getMedicalOrderId());
         }
         
         entity.setPetId(medicalOrder.getPetId());

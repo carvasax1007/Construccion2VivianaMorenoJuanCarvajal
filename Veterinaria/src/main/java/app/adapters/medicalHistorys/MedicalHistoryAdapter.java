@@ -85,6 +85,15 @@ public class MedicalHistoryAdapter implements MedicalHistoryPort{
         medicalHistory.setCancellationOrder(entity.isCancellationOrder());
         medicalHistory.setDateilprocedure(entity.getDetailProcedure());
 
+        // Convertir las órdenes médicas
+        List<MedicalOrder> orders = new ArrayList<>();
+        if (entity.getMedicalOrders() != null) {
+            for (MedicalOrderEntity orderEntity : entity.getMedicalOrders()) {
+                orders.add(toDomain(orderEntity));
+            }
+        }
+        medicalHistory.setMedicalOrders(orders);
+
         return medicalHistory;
     }
     private MedicalHistoryEntity medicalHistoryEntityAdapter(MedicalHistory medicalHistory){
@@ -115,6 +124,9 @@ public class MedicalHistoryAdapter implements MedicalHistoryPort{
         medicalOrder.setMedication(entity.getMedication());
         medicalOrder.setEntryDate(entity.getEntryDate());
         medicalOrder.setCanceled(entity.isCanceled());
+        if (entity.getMedicalHistory() != null) {
+            medicalOrder.setMedicalHistoryId(entity.getMedicalHistory().getMedicalHistoryId());
+        }
         return medicalOrder;
     }
     private MedicalOrderEntity toEntity(MedicalOrder order){

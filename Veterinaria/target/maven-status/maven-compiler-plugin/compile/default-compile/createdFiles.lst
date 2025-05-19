@@ -1,5 +1,6 @@
 app/ports/MedicalOrderPort.class
 app/domain/models/Person.class
+app/adapters/rest/request/MedicalHistoryQueryRequest.class
 app/adapters/medicalOrders/MedicalOrderAdapter.class
 app/adapters/inputs/utils/UserValidator.class
 app/adapters/rest/AdminController.class
@@ -29,6 +30,7 @@ app/adapters/inputs/utils/Utils.class
 app/ports/PetPort.class
 app/adapters/persons/PersonAdapter.class
 app/domain/services/VeterinarianService.class
+app/adapters/rest/request/CancelOrderRequest.class
 app/adapters/users/repository/UserRepository.class
 app/adapters/users/UserAdapter.class
 app/adapters/medicalHistorys/repository/MedicalHistoryRepository.class

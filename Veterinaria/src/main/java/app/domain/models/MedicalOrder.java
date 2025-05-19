@@ -84,11 +84,11 @@ public class MedicalOrder {
     public void setCanceled(boolean canceled) {
         this.canceled = canceled;
     }
-
+ 
     public Long getMedicalHistoryId() {
         return medicalHistoryId;
     }
-
+  
     public void setMedicalHistoryId(Long medicalHistoryId) {
         this.medicalHistoryId = medicalHistoryId;
     }

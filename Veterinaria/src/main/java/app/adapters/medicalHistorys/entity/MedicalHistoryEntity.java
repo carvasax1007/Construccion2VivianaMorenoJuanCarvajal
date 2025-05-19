@@ -4,24 +4,23 @@
  */
 package app.adapters.medicalHistorys.entity;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import app.adapters.medicalOrders.entity.MedicalOrderEntity;
 import app.adapters.pets.entity.PetEntity;
-import app.domain.models.MedicalOrder;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.OneToOne;
-
-import java.sql.Date;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -86,6 +85,9 @@ public class MedicalHistoryEntity {
    
    @Column(name="cancellation_order")
    private boolean cancellationOrder;
+
+    @OneToMany(mappedBy = "medicalHistory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MedicalOrderEntity> medicalOrders = new ArrayList<>();
 
     public Long getMedicalHistoryId() {
         return medicalHistoryId;
@@ -157,6 +159,14 @@ public class MedicalHistoryEntity {
 
     public void setCancellationOrder(boolean cancellationOrder) {
         this.cancellationOrder = cancellationOrder;
+    }
+
+    public List<MedicalOrderEntity> getMedicalOrders() {
+        return medicalOrders;
+    }
+
+    public void setMedicalOrders(List<MedicalOrderEntity> medicalOrders) {
+        this.medicalOrders = medicalOrders;
     }
 
 

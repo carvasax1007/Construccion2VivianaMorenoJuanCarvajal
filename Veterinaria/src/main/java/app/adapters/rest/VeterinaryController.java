@@ -183,22 +183,36 @@ public class VeterinaryController {
         }
     }
 
-    @GetMapping("/medical-history/pet/{petId}")
-    public ResponseEntity getMedicalHistoryByPetId(
-            @PathVariable String petId,
-            @RequestParam long veterinaryDocument) {
+    @PostMapping("/medical-order/cancel")
+    public ResponseEntity cancelMedicalOrder(@RequestBody CancelOrderRequest request) {
         try {
-            // Autenticar veterinario
-            authenticationService.authenticateVeterinarian(veterinaryDocument);
-
-            // Obtener historias clínicas
-            return new ResponseEntity(veterinarianService.getMedicalHistoryByPetId(petId), 
-                HttpStatus.OK);
-
+            veterinarianService.cancelMedicalOrder(request.getOrderId(), request.getVeterinaryDocument());
+            return new ResponseEntity("Orden médica cancelada exitosamente", HttpStatus.OK);
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BusinessException be) {
+            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("Error al cancelar la orden médica: " + e.getMessage(), 
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/medical-history/query")
+    public ResponseEntity getMedicalHistory(@RequestBody MedicalHistoryQueryRequest request) {
+        try {
+            MedicalHistory history = veterinarianService.getMedicalHistoryByPetId(
+                request.getPetId(), 
+                request.getVeterinaryDocument()
+            );
+            return new ResponseEntity(history, HttpStatus.OK);
+        } catch (AuthenticationException ae) {
+            return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BusinessException be) {
+            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity("Error al obtener la historia clínica: " + e.getMessage(), 
+                HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

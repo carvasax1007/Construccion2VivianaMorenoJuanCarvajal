@@ -114,7 +114,7 @@ public class MedicalOrderEntity {
     public MedicalHistoryEntity getMedicalHistory() {
         return medicalHistory;
     }
-
+    
     public void setMedicalHistory(MedicalHistoryEntity medicalHistory) {
         this.medicalHistory = medicalHistory;
     }

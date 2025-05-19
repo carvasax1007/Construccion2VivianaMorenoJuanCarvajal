@@ -69,7 +69,7 @@ public class VeterinarianService {
             throw new Exception("No se encontró un historial médico para esta mascota.");
         }
         return historyList;
-}
+    }
 
     public void updateMedicalHistory(MedicalHistory medicalHistory) throws Exception {
         if (medicalHistory == null) {
@@ -127,5 +127,44 @@ public class VeterinarianService {
     }
     return order;
 }
+
+    public void cancelMedicalOrder(long medicalOrderId, long veterinaryDocument) throws Exception {
+        // Verificar que el veterinario exista y sea válido
+        Person veterinarian = personPort.findByDocument(veterinaryDocument);
+        if (veterinarian == null || !"veterinarian".equalsIgnoreCase(veterinarian.getRole())) {
+            throw new Exception("El veterinario con documento " + veterinaryDocument + " no existe o no tiene permisos.");
+        }
+
+        // Obtener la orden médica
+        MedicalOrder medicalOrder = medicalOrderPort.findById(medicalOrderId);
+        if (medicalOrder == null) {
+            throw new Exception("La orden médica con ID " + medicalOrderId + " no existe.");
+        }
+
+        // Verificar que la orden no esté ya cancelada
+        if (medicalOrder.isCanceled()) {
+            throw new Exception("La orden médica ya está cancelada.");
+        }
+
+        // Cancelar la orden
+        medicalOrderPort.cancel(medicalOrderId);
+    }
+
+    public MedicalHistory getMedicalHistoryByPetId(long petId, long veterinaryDocument) throws Exception {
+        // Verificar que el veterinario exista y sea válido
+        Person veterinarian = personPort.findByDocument(veterinaryDocument);
+        if (veterinarian == null || !"veterinarian".equalsIgnoreCase(veterinarian.getRole())) {
+            throw new Exception("El veterinario con documento " + veterinaryDocument + " no existe o no tiene permisos.");
+        }
+
+        // Obtener la historia clínica
+        List<MedicalHistory> histories = medicalHistoryPort.findByPetId(petId);
+        if (histories.isEmpty()) {
+            throw new Exception("No se encontró historia clínica para la mascota con ID " + petId);
+        }
+
+        // Retornar la historia clínica más reciente
+        return histories.get(0);
+    }
 }
 
