@@ -1,1 +1,1 @@
-<Construcción Software 2> <Viviana Moreno Sierra> #Tecnologia <Apache NetBeans>
+<Construcción Software 2> <Viviana Moreno Sierra> y Juan Pablo Carvajal #Tecnologia <Apache NetBeans>
