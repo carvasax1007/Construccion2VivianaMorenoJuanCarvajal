@@ -8,6 +8,11 @@ import app.ports.MedicalHistoryPort;
 import app.ports.MedicalOrderPort;
 import app.ports.PersonPort;
 import app.ports.PetPort;
+import app.adapters.inputs.utils.PersonValidator;
+import app.adapters.inputs.utils.PetValidator;
+import app.Exceptions.InputsException;
+import app.Exceptions.AuthenticationException;
+import app.Exceptions.BusinessException;
 
 import java.util.List;
 import lombok.Getter;
@@ -34,18 +39,47 @@ public class VeterinarianService {
     @Autowired
     private MedicalOrderPort medicalOrderPort;
 
+    @Autowired
+    private PersonValidator personValidator;
+
+    @Autowired
+    private PetValidator petValidator;
+
     public void registerPet(Pet pet) throws Exception {
         // Verificar que el dueño exista
         if (!personPort.existPerson(pet.getOwnerDocument())) {
             throw new Exception("El dueño con documento " + pet.getOwnerDocument() + " no existe");
         }
-         petPort.savePet(pet);
+
+        // Validar la edad de la mascota
+        try {
+            pet.setAge(petValidator.ageValidator(String.valueOf(pet.getAge())));
+        } catch (Exception e) {
+            throw new InputsException("Error en la validación de edad: " + e.getMessage());
+        }
+
+        // Validar el peso de la mascota
+        try {
+            pet.setWeight(petValidator.weightValidator(String.valueOf(pet.getWeight())));
+        } catch (Exception e) {
+            throw new InputsException("Error en la validación del peso: " + e.getMessage());
+        }
+
+        petPort.savePet(pet);
     }
 
     public void registerOwner(Person owner) throws Exception {
         if (personPort.existPerson(owner.getDocument())) {
             throw new Exception("Ya existe persona con este documento");
         }
+        
+        // Validar la edad del propietario
+        try {
+            owner.setAge(personValidator.ageValidator(String.valueOf(owner.getAge())));
+        } catch (Exception e) {
+            throw new InputsException("Error en la validación de edad: " + e.getMessage());
+        }
+        
         personPort.savePerson(owner);
     }
 
@@ -170,14 +204,17 @@ public class VeterinarianService {
     public Pet getPetById(long petId, long veterinaryDocument) throws Exception {
         // Verificar que el veterinario exista y sea válido
         Person veterinarian = personPort.findByDocument(veterinaryDocument);
-        if (veterinarian == null || !"veterinarian".equalsIgnoreCase(veterinarian.getRole())) {
-            throw new Exception("El veterinario con documento " + veterinaryDocument + " no existe o no tiene permisos.");
+        if (veterinarian == null) {
+            throw new AuthenticationException("El veterinario con documento " + veterinaryDocument + " no existe");
+        }
+        if (!"veterinarian".equalsIgnoreCase(veterinarian.getRole())) {
+            throw new AuthenticationException("El usuario con documento " + veterinaryDocument + " no tiene permisos de veterinario");
         }
 
         // Obtener la mascota
         Pet pet = petPort.findById(petId);
         if (pet == null) {
-            throw new Exception("No se encontró la mascota con ID " + petId);
+            throw new BusinessException("No se encontró la mascota con ID " + petId);
         }
 
         return pet;
