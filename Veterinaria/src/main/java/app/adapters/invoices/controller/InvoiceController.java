@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import org.springframework.http.HttpStatus;
+import app.Exceptions.AuthenticationException;
+import app.Exceptions.BusinessException;
+import app.domain.services.SellerService;
 
 @RestController
 @RequestMapping("/invoices")
@@ -17,53 +21,53 @@ import java.util.Date;
 public class InvoiceController {
     
     @Autowired
-    private InvoiceAdapter invoiceAdapter;
-    
-    @Autowired
-    private PersonRepository personRepository;
-    
-    @Autowired
-    private MedicalOrderRepository medicalOrderRepository;
+    private SellerService sellerService;
     
     @PostMapping
-    public ResponseEntity<?> createInvoice(@RequestBody Invoice invoice) {
+    public ResponseEntity createInvoice(@RequestBody Invoice invoice) {
         try {
-            // Validar que el vendedor existe y es un vendedor
-            if (!personRepository.existsByDocumentAndRole(invoice.getSellerId(), "seller")) {
-                return ResponseEntity.badRequest().body("El vendedor no existe o no tiene el rol correcto");
+            // Establecer la fecha automáticamente y convertirla a String
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDate = dateFormat.format(new java.util.Date());
+            invoice.setDate(currentDate);
+
+            // Guardar factura
+            sellerService.sellProduct(invoice);
+
+            return new ResponseEntity("Factura creada exitosamente", HttpStatus.CREATED);
+
+        } catch (AuthenticationException ae) {
+            return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BusinessException be) {
+            // Si la mascota no existe, es un error 404
+            if (be.getMessage().contains("mascota") && be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
             }
-            
-            // Validar que la mascota existe
-            if (!personRepository.existsById(invoice.getPetId())) {
-                return ResponseEntity.badRequest().body("La mascota no existe");
+            // Si el propietario no existe, es un error 404
+            if (be.getMessage().contains("dueño") && be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
             }
-            
-            // Validar que el dueño existe
-            if (!personRepository.existsByDocument(invoice.getOwnerId())) {
-                return ResponseEntity.badRequest().body("El dueño no existe");
+            // Si la orden médica no existe, es un error 404
+            if (be.getMessage().contains("orden médica") && be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
             }
-            
-            // Validar que la orden médica existe si se proporciona
-            if (invoice.getMedicalOrderId() != null && invoice.getMedicalOrderId() > 0) {
-                if (!medicalOrderRepository.existsById(invoice.getMedicalOrderId())) {
-                    return ResponseEntity.badRequest().body("La orden médica no existe");
-                }
+            // Si la factura es nula, es un error 400
+            if (be.getMessage().contains("no puede ser nula")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.BAD_REQUEST);
             }
-            
-            // Validar el formato de la fecha
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateFormat.setLenient(false); // Esto hace que la validación sea más estricta
-                dateFormat.parse(invoice.getDate()); // Solo validamos el formato
-            } catch (ParseException e) {
-                return ResponseEntity.badRequest().body("Formato de fecha inválido. Use el formato yyyy-MM-dd");
+            // Si la mascota no pertenece al dueño, es un error 409
+            if (be.getMessage().contains("no pertenece al dueño")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
             }
-            
-            invoiceAdapter.saveInvoice(invoice);
-            return ResponseEntity.ok("Se ha registrado la factura exitosamente");
-            
+            // Si la orden médica no corresponde a la mascota, es un error 409
+            if (be.getMessage().contains("no corresponde a la mascota")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            }
+            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al crear la factura: " + e.getMessage());
+            // Solo errores internos del servidor deberían llegar aquí
+            return new ResponseEntity("Error interno del servidor al crear la factura", 
+                HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 } 

@@ -118,7 +118,7 @@ public class VeterinaryController {
             // Crear y validar historia clínica
             MedicalHistory medicalHistory = new MedicalHistory();
             medicalHistory.setPetId(request.getPetId());
-            medicalHistory.setRegistrationDate(request.getRegistrationDate());
+            medicalHistory.setRegistrationDate(new java.sql.Date(System.currentTimeMillis()));
             medicalHistory.setVeterinaryDoctor(veterinarian.getName());
             medicalHistory.setReasonConsultation(
                 medicalHistoryValidator.reasonConsultationValidator(request.getReasonConsultation())
@@ -139,11 +139,20 @@ public class VeterinaryController {
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BusinessException be) {
+            // Si la mascota no existe, es un error 404
+            if (be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
+            }
+            // Si el historial médico es nulo, es un error 400
+            if (be.getMessage().contains("no puede ser nulo")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
         } catch (InputsException ie) {
             return new ResponseEntity(ie.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity("Error al crear la historia clínica: " + e.getMessage(), 
+            // Solo errores internos del servidor deberían llegar aquí
+            return new ResponseEntity("Error interno del servidor al crear la historia clínica", 
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -164,7 +173,7 @@ public class VeterinaryController {
             medicalOrder.setMedication(
                 medicalOrderValidator.medicationValidator(request.getMedication())
             );
-            medicalOrder.setEntryDate(request.getEntryDate());
+            medicalOrder.setEntryDate(new java.sql.Date(System.currentTimeMillis()));
             medicalOrder.setCanceled(false);
             medicalOrder.setMedicalHistoryId(request.getMedicalHistoryId());
 
@@ -176,11 +185,36 @@ public class VeterinaryController {
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BusinessException be) {
+            // Si la mascota no existe, es un error 404
+            if (be.getMessage().contains("mascota") && be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
+            }
+            // Si el propietario no existe, es un error 404
+            if (be.getMessage().contains("propietario") && be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
+            }
+            // Si la historia clínica no existe, es un error 404
+            if (be.getMessage().contains("historia clínica") && be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
+            }
+            // Si la orden médica es nula, es un error 400
+            if (be.getMessage().contains("no puede ser nula")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+            // Si el propietario no corresponde a la mascota, es un error 409
+            if (be.getMessage().contains("no es el dueño")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            }
+            // Si la historia clínica no corresponde a la mascota, es un error 409
+            if (be.getMessage().contains("no corresponde")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            }
             return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
         } catch (InputsException ie) {
             return new ResponseEntity(ie.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity("Error al crear la orden médica: " + e.getMessage(), 
+            // Solo errores internos del servidor deberían llegar aquí
+            return new ResponseEntity("Error interno del servidor al crear la orden médica", 
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -193,9 +227,18 @@ public class VeterinaryController {
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BusinessException be) {
+            // Si la orden médica no existe, es un error 404
+            if (be.getMessage().contains("no existe")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
+            }
+            // Si la orden ya está cancelada, es un error 409
+            if (be.getMessage().contains("ya está cancelada")) {
+                return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            }
             return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return new ResponseEntity("Error al cancelar la orden médica: " + e.getMessage(), 
+            // Solo errores internos del servidor deberían llegar aquí
+            return new ResponseEntity("Error interno del servidor al cancelar la orden médica", 
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -213,7 +256,7 @@ public class VeterinaryController {
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BusinessException be) {
-            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity("Error al obtener la historia clínica: " + e.getMessage(), 
                 HttpStatus.INTERNAL_SERVER_ERROR);
@@ -229,13 +272,19 @@ public class VeterinaryController {
             authenticationService.authenticateVeterinarian(veterinaryDocument);
 
             // Obtener orden médica
-            return new ResponseEntity(veterinarianService.getMedicalOrderById(orderId), 
-                HttpStatus.OK);
+            MedicalOrder order = veterinarianService.getMedicalOrderById(orderId);
+            if (order == null) {
+                return new ResponseEntity("No se encontró la orden médica", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity(order, HttpStatus.OK);
 
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (BusinessException be) {
+            return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("Error al obtener la orden médica: " + e.getMessage(), 
+                HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -249,7 +298,7 @@ public class VeterinaryController {
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BusinessException be) {
-            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity("Error al obtener los datos de la mascota: " + e.getMessage(), 
                 HttpStatus.INTERNAL_SERVER_ERROR);
@@ -266,9 +315,9 @@ public class VeterinaryController {
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BusinessException be) {
-            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity("Error al obtener los datos del dueño: " + e.getMessage(), 
+            return new ResponseEntity("Error al obtener los datos del propietario: " + e.getMessage(), 
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -283,7 +332,7 @@ public class VeterinaryController {
         } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BusinessException be) {
-            return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity(be.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity("Error al obtener las órdenes médicas: " + e.getMessage(), 
                 HttpStatus.INTERNAL_SERVER_ERROR);
