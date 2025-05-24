@@ -16,4 +16,15 @@ public class PetRequest {
     private String size;
     private double weight;
     private long ownerDocument;
+
+    public long getVeterinaryDocument() { return veterinaryDocument; }
+    public String getPetName() { return petName; }
+    public int getPetAge() { return petAge; }
+    public String getSpecies() { return species; }
+    public String getRace() { return race; }
+    public String getCharacteristics() { return characteristics; }
+    public String getColor() { return color; }
+    public String getSize() { return size; }
+    public double getWeight() { return weight; }
+    public long getOwnerDocument() { return ownerDocument; }
 } 

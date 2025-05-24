@@ -14,11 +14,15 @@ import org.springframework.http.HttpStatus;
 import app.Exceptions.AuthenticationException;
 import app.Exceptions.BusinessException;
 import app.domain.services.SellerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/invoices")
 @CrossOrigin(origins = "*")
 public class InvoiceController {
+    
+    private static final Logger log = LoggerFactory.getLogger(InvoiceController.class);
     
     @Autowired
     private SellerService sellerService;
@@ -26,6 +30,29 @@ public class InvoiceController {
     @PostMapping
     public ResponseEntity createInvoice(@RequestBody Invoice invoice) {
         try {
+            // Validaciones de campos requeridos
+            if (invoice == null) {
+                return new ResponseEntity("La factura no puede ser nula", HttpStatus.BAD_REQUEST);
+            }
+            if (invoice.getPetId() == null) {
+                return new ResponseEntity("El ID de la mascota es requerido", HttpStatus.BAD_REQUEST);
+            }
+            if (invoice.getOwnerId() == null) {
+                return new ResponseEntity("El ID del propietario es requerido", HttpStatus.BAD_REQUEST);
+            }
+            if (invoice.getSellerId() == null) {
+                return new ResponseEntity("El ID del vendedor es requerido", HttpStatus.BAD_REQUEST);
+            }
+            if (invoice.getProductName() == null || invoice.getProductName().trim().isEmpty()) {
+                return new ResponseEntity("El nombre del producto es requerido", HttpStatus.BAD_REQUEST);
+            }
+            if (invoice.getValue() == null || invoice.getValue() <= 0) {
+                return new ResponseEntity("El valor debe ser mayor a cero", HttpStatus.BAD_REQUEST);
+            }
+            if (invoice.getQuantity() == null || invoice.getQuantity() <= 0) {
+                return new ResponseEntity("La cantidad debe ser mayor a cero", HttpStatus.BAD_REQUEST);
+            }
+
             // Establecer la fecha automáticamente y convertirla a String
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String currentDate = dateFormat.format(new java.util.Date());
@@ -66,6 +93,7 @@ public class InvoiceController {
             return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             // Solo errores internos del servidor deberían llegar aquí
+            log.error("Error al crear la factura", e);
             return new ResponseEntity("Error interno del servidor al crear la factura", 
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }

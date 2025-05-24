@@ -7,8 +7,8 @@ package app.adapters.rest;
 import app.Exceptions.BusinessException;
 import app.Exceptions.InputsException;
 import app.Exceptions.AuthenticationException;
-import app.adapters.inputs.utils.PersonValidator;
-import app.adapters.inputs.utils.UserValidator;
+import app.adapters.validators.PersonValidator;
+import app.adapters.validators.UserValidator;
 import app.adapters.rest.request.SellerRequest;
 import app.adapters.rest.request.VeterinarianRequest;
 import app.domain.models.User;
@@ -46,44 +46,50 @@ public class AdminController {
     }
     
     @PostMapping("/veterinarian")
-    public ResponseEntity registerVeterinarian(@RequestBody VeterinarianRequest request) throws Exception{
-        try{
+    public ResponseEntity registerVeterinarian(@RequestBody VeterinarianRequest request) {
+        try {
             User veterinarian = new User();
             veterinarian.setName(personValidator.nameValidator(request.getName()));
             veterinarian.setDocument(request.getDocument());
-            veterinarian.setAge(request.getAge());
+            veterinarian.setAge(personValidator.ageValidator(String.valueOf(request.getAge())));
             veterinarian.setPassword(userValidator.passwordValidator(request.getPassword()));
             veterinarian.setUserName(userValidator.userNameValidator(request.getUserName()));
             adminservice.registerVeterinarian(veterinarian, request.getAdminUserName(), request.getAdminPassword());
             return new ResponseEntity("Se ha registrado el veterinario", HttpStatus.CREATED);
         
-        }catch(AuthenticationException ae){
+        } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
-        }catch(BusinessException be){
+        } catch (BusinessException be) {
             return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
-        }catch(InputsException ie){
+        } catch (InputsException ie) {
             return new ResponseEntity(ie.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            // Capturamos cualquier otra excepción y la manejamos como un error de validación
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/seller")
-    public ResponseEntity registerSeller(@RequestBody SellerRequest request) throws Exception{
-        try{
+    public ResponseEntity registerSeller(@RequestBody SellerRequest request) {
+        try {
             User seller = new User();
             seller.setName(personValidator.nameValidator(request.getName()));
             seller.setDocument(request.getDocument());
-            seller.setAge(request.getAge());
+            seller.setAge(personValidator.ageValidator(String.valueOf(request.getAge())));
             seller.setPassword(userValidator.passwordValidator(request.getPassword()));
             seller.setUserName(userValidator.userNameValidator(request.getUserName()));
             adminservice.registerSeller(seller, request.getAdminUserName(), request.getAdminPassword());
             return new ResponseEntity("Se ha registrado el vendedor", HttpStatus.CREATED);
         
-        }catch(AuthenticationException ae){
+        } catch (AuthenticationException ae) {
             return new ResponseEntity(ae.getMessage(), HttpStatus.UNAUTHORIZED);
-        }catch(BusinessException be){
+        } catch (BusinessException be) {
             return new ResponseEntity(be.getMessage(), HttpStatus.CONFLICT);
-        }catch(InputsException ie){
+        } catch (InputsException ie) {
             return new ResponseEntity(ie.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            // Capturamos cualquier otra excepción y la manejamos como un error de validación
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

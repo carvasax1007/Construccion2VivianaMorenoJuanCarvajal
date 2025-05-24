@@ -13,4 +13,10 @@ public class MedicalOrderRequest {
     private String medication;
     private Date entryDate;
     private Long medicalHistoryId;
+
+    public long getVeterinaryDocument() { return veterinaryDocument; }
+    public Long getPetId() { return petId; }
+    public Long getOwnerId() { return ownerId; }
+    public String getMedication() { return medication; }
+    public Long getMedicalHistoryId() { return medicalHistoryId; }
 } 

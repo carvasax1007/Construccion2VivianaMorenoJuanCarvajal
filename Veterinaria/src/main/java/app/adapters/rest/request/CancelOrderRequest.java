@@ -8,4 +8,7 @@ import lombok.Setter;
 public class CancelOrderRequest {
     private long veterinaryDocument;
     private long orderId;
+
+    public long getOrderId() { return orderId; }
+    public long getVeterinaryDocument() { return veterinaryDocument; }
 } 

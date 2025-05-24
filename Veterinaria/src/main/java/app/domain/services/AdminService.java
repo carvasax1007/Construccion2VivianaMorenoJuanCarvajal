@@ -6,7 +6,7 @@ import app.Exceptions.InputsException;
 import app.ports.UserPort;
 import app.domain.models.User;
 import app.ports.PersonPort;
-import app.adapters.inputs.utils.PersonValidator;
+import app.adapters.validators.PersonValidator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;

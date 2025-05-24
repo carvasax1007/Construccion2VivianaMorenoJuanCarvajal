@@ -12,4 +12,11 @@ public class MedicalHistoryRequest {
     private String diagnosis;
     private String detailProcedure;
     private Long petId;
+
+    public long getVeterinaryDocument() { return veterinaryDocument; }
+    public String getReasonConsultation() { return reasonConsultation; }
+    public String getSymptomatology() { return symptomatology; }
+    public String getDiagnosis() { return diagnosis; }
+    public String getDetailProcedure() { return detailProcedure; }
+    public Long getPetId() { return petId; }
 } 

@@ -10,4 +10,9 @@ public class OwnerRequest {
     private String ownerName;
     private long ownerDocument;
     private int ownerAge;
+
+    public long getVeterinaryDocument() { return veterinaryDocument; }
+    public String getOwnerName() { return ownerName; }
+    public long getOwnerDocument() { return ownerDocument; }
+    public int getOwnerAge() { return ownerAge; }
 } 
